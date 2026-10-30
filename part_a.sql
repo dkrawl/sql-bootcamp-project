@@ -153,3 +153,23 @@ select
     100.0 * penalties / sum(penalties) over() as avg_pen
 from pen
 order by avg_pen desc;
+
+
+-- 10. Који тренер је освојио највише бодова у утакмицама у којима је његов тим губио на
+-- полувремену? Рачунајте и домаће и гостујуће утакмице.
+
+
+select *
+from matches m
+inner join teams ht
+    on m.home_team_id = ht.team_id
+inner join teams at
+    on m.away_team_id = at.team_id
+inner join manager_spells hm
+    on m.home_team_id = hm.team_id
+    and m.kickoff_ts >= hm.start_date
+    and (m.kickoff_ts < hm.end_date or hm.end_date is null)
+inner join manager_spells am
+    on m.away_team_id = am.team_id
+    and m.kickoff_ts >= am.start_date
+    and (m.kickoff_ts < am.end_date or am.end_date is null);
