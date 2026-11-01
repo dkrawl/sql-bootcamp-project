@@ -3,13 +3,13 @@
 ## 1. Pregled sezone
 
 Broj odigranih utakmica: 380.
-Ukupan broj golova: 1.092.
-Prosecan broj golova po utakmici: 2,87.
-Udeo pobeda domacina: 41,32%
-Udeo neresenih utakmica: 25,00%.
-Udeo pobeda gostiju: 33,68%.
+Ukupan broj golova: 1092.
+Prosecan broj golova po utakmici: 2.87.
+Udeo pobeda domacina: 41.32%
+Udeo neresenih utakmica: 25.00%.
+Udeo pobeda gostiju: 33.68%.
 
-Tokom sezone 2024/25 odigrano je 380 utakmica, na kojima je postignuto ukupno 1.092 golova, prosečno 2,87 po utakmici. Domacini su ostvarili najveci procenat pobeda (41,32%), dok su gosti pobedili u 33,68% utakmica. Cetvrtina utakmica završena je neresenim rezultatom.
+Tokom sezone 2024/25 odigrano je 380 utakmica, na kojima je postignuto ukupno 1092 golova, prosečno 2.87 po utakmici. Domacini su ostvarili najveci procenat pobeda (41.32%), dok su gosti pobedili u 33.68% utakmica. Cetvrtina utakmica završena je neresenim rezultatom.
 
 ## 2. Pregled po mesecima
 

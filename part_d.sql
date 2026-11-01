@@ -21,20 +21,16 @@
 
 create or replace table dim_team as
 select
-    home_team_id as team_id,
-    home_team as team_name,
-    home_team_code as team_code
-from matches_flat_copy
-union
-select
-    away_team_id as team_id,
-    away_team as team_name,
-    away_team_code as team_code
-from matches_flat_copy;
-
-select * from dim_team;
+    team_id,
+    team_name,
+    short_name,
+    city,
+    founded_year,
+    stadium_id
+from teams;
 
 -- Tabela dim_date:
+
 
 CREATE OR REPLACE TABLE dim_date AS
 SELECT CAST(DATE_FORMAT(d, 'yyyyMMdd') AS INT) AS date_key,
@@ -45,7 +41,6 @@ SELECT CAST(DATE_FORMAT(d, 'yyyyMMdd') AS INT) AS date_key,
             ELSE CONCAT(YEAR(d) - 1, '/', SUBSTRING(CAST(YEAR(d) AS STRING), 3, 2))
        END                                     AS season
 FROM (SELECT EXPLODE(SEQUENCE(DATE'2023-07-01', DATE'2025-06-30', INTERVAL 1 DAY)) AS d);
-
 
 -- Tabela dim_player:
 
@@ -66,7 +61,7 @@ select * from dim_player;
 
 -- Tabela dim_referee:
 
-create or replace dim_referee as
+create or replace table dim_referee as
 select
     referee_id,
     referee_name,
@@ -83,12 +78,29 @@ select
     e.match_id,
     cast(date_format(m.kickoff_ts, 'yyyyMMdd') as int) AS date_key,
     e.team_id,
-    coalesce(p.player_id, -1) AS player_id,
+    p.player_id,
     m.referee_id,
-    e.event_type as card_type
+    e.event_type
 from match_events e
 join matches m
     on e.match_id = m.match_id
 left join dim_player p
     on e.player_id = p.player_id
 where e.event_type in ('yellow_card', 'second_yellow', 'red_card');
+
+
+-- 2. Упитом покажите да fact_card има исто редова колико има картонских догађаја
+
+select
+	count(*) as num_row_cards
+from fact_card;
+
+
+-- 3. Колико картона има player_id = -1?
+
+-- Player id -1 ne postoji u fact_card tabeli na nacin na koji sam radio join.
+
+select
+    event_type
+from fact_card
+where player_id = -1;
