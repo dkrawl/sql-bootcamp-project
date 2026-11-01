@@ -158,18 +158,56 @@ order by avg_pen desc;
 -- 10. Који тренер је освојио највише бодова у утакмицама у којима је његов тим губио на
 -- полувремену? Рачунајте и домаће и гостујуће утакмице.
 
-
-select *
-from matches m
-inner join teams ht
-    on m.home_team_id = ht.team_id
-inner join teams at
-    on m.away_team_id = at.team_id
-inner join manager_spells hm
-    on m.home_team_id = hm.team_id
-    and m.kickoff_ts >= hm.start_date
-    and (m.kickoff_ts < hm.end_date or hm.end_date is null)
-inner join manager_spells am
-    on m.away_team_id = am.team_id
-    and m.kickoff_ts >= am.start_date
-    and (m.kickoff_ts < am.end_date or am.end_date is null);
+with tm as (
+    select
+        match_id,
+        kickoff_ts,
+        home_team_id as team_id,
+        home_goals_ht as goals_for_ht,
+        away_goals_ht as goals_against_ht,
+        home_goals as goals_for,
+        away_goals as goals_against
+    from matches
+    where home_goals_ht < away_goals_ht
+    union all
+    select
+        match_id,
+        kickoff_ts,
+        away_team_id as team_id,
+        away_goals_ht as goals_for_ht,
+        home_goals_ht as goals_against_ht,
+        away_goals as goals_for,
+        home_goals as goals_against
+    from matches
+    where away_goals_ht < home_goals_ht
+),
+manager_points as (
+select
+    tm.match_id,
+    tm.team_id,
+    ms.manager_name,
+    tm.goals_for,
+    tm.goals_against,
+    case
+        when tm.goals_for > tm.goals_against
+        then 3
+        when tm.goals_for = tm.goals_against
+        then 1
+        else 0
+    end as points
+from tm tm
+join manager_spells ms
+    on tm.team_id = ms.team_id
+    and tm.kickoff_ts >= ms.start_date
+    and (
+        tm.kickoff_ts < ms.end_date
+        or ms.end_date is null
+    )
+)
+select
+    manager_name,
+    sum(points) as points
+from manager_points
+group by manager_name
+order by points desc
+limit 1;
